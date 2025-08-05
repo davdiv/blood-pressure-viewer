@@ -30,10 +30,10 @@
       {@const cssClassification = classificationClasses[classification]}
       <tr
         ><td class={cssClassification}>{formatDate(measure.timestamp)}</td><td
-          class={cssClassification}>{Math.floor(measure.systolic)}</td
-        ><td class={cssClassification}>{Math.floor(measure.diastolic)}</td><td
+          class={cssClassification}>{Math.round(measure.systolic)}</td
+        ><td class={cssClassification}>{Math.round(measure.diastolic)}</td><td
           class={cssClassification}
-          >{measure.pulseRate != null ? Math.floor(measure.pulseRate) : ""}</td
+          >{measure.pulseRate != null ? Math.round(measure.pulseRate) : ""}</td
         ><td class={cssClassification}>
           {#if (measure.status ?? 0) & Status.IRREGULAR_PULSE}<span
               class="badge text-bg-secondary"
