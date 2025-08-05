@@ -34,7 +34,7 @@
 {#if filters.length > 0}
   <details>
     <summary>Filters ({filtersValue.size})</summary>
-    <div class="btn-group-vertical mb-3" role="group" aria-label="Filters">
+    <div class="btn-group-vertical my-3 ms-3" role="group" aria-label="Filters">
       {#each filters as filter}
         {@const active = filtersValue.get(filter.filter)}
         <button

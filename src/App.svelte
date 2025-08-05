@@ -90,13 +90,15 @@
       </div>
     {/if}
     {#each $data$.users as user}
-      {#if user.user != null}
-        <h3>User {user.user}</h3>
-      {/if}
-      <TransformMeasures measures={user.measures} />
+      <details open>
+        <summary>User {user.user ?? ""}</summary>
+        <div class="ms-4">
+          <TransformMeasures measures={user.measures} />
+        </div>
+      </details>
     {/each}
   {/if}
-  <div class="mt-3 text-body-secondary">
+  <div class="my-3 text-body-secondary">
     <small
       >The <a
         target="_blank"
