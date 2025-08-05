@@ -17,18 +17,18 @@
       data: {
         datasets: [
           {
-            label: "Systolic",
+            label: "Systolic (mmHg)",
             data: data.map((item) => ({ x: item.timestamp, y: item.systolic })),
           },
           {
-            label: "Diastolic",
+            label: "Diastolic (mmHg)",
             data: data.map((item) => ({
               x: item.timestamp,
               y: item.diastolic,
             })),
           },
           {
-            label: "Pulse rate",
+            label: "Pulse rate (beats/min)",
             data: data.map((item) => ({
               x: item.timestamp,
               y: item.pulseRate,
