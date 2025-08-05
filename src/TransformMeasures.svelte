@@ -34,12 +34,12 @@
 {#if filters.length > 0}
   <details>
     <summary>Filters ({filtersValue.size})</summary>
-    <div class="btn-group-vertical my-3 ms-3" role="group" aria-label="Filters">
+    <div class="mb-3 ms-3" role="group" aria-label="Filters">
       {#each filters as filter}
         {@const active = filtersValue.get(filter.filter)}
         <button
           title={filter.description}
-          class={["btn btn-outline-primary", { active: active != null }]}
+          class={["btn btn-outline-primary ms-1 mt-1", { active: active != null }]}
           onclick={() => toggleFilter(filter.filter)}
         >
           {#if active === true}<Check />{:else if active === false}<Ban

@@ -2,13 +2,13 @@ import type { BloodPressureMeasurement } from "./bluetooth/decoding";
 import "./classificationStyle.css";
 
 export enum Classification {
-  HypertensionSevere,
-  HypertensionMedium,
-  HypertensionLight,
-  NormalHigh,
-  Normal,
-  NormalOptimal,
   HypoTension,
+  NormalOptimal,
+  Normal,
+  NormalHigh,
+  HypertensionLight,
+  HypertensionMedium,
+  HypertensionSevere,
 }
 
 export const classify = ({

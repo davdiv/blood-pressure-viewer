@@ -1,5 +1,6 @@
 import type { SvelteMap } from "svelte/reactivity";
 import { Status, type BloodPressureMeasurement } from "./bluetooth/decoding";
+import { Classification, classify } from "./classificationLogic";
 
 export type Filter = (measure: BloodPressureMeasurement) => boolean;
 
@@ -26,6 +27,28 @@ export const filters: { name: string; description: string; filter: Filter }[] =
       name: "Evening",
       description: "Evening measures  (6-11 pm)",
       filter: (measure) => isInTimeRange(measure.timestamp, 18, 23),
+    },
+    {
+      name: "Hypotension",
+      description: "Measures showing hypotension",
+      filter: (measure) => classify(measure) === Classification.HypoTension,
+    },
+    {
+      name: "Normal tension",
+      description: "Measures showing normal tension",
+      filter: (measure) => {
+        const value = classify(measure);
+        return (
+          value >= Classification.NormalOptimal &&
+          value <= Classification.NormalHigh
+        );
+      },
+    },
+    {
+      name: "Hypertension",
+      description: "Measures showing hypertension",
+      filter: (measure) =>
+        classify(measure) >= Classification.HypertensionLight,
     },
     {
       name: "Irregular pulse",
