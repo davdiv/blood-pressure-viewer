@@ -8,9 +8,12 @@
   const formatDate = (date: string | undefined) => {
     if (!date) return "";
     const d = new Date(date);
-    return `${f2(d.getDate())}/${f2(d.getMonth() + 1)}/${d.getFullYear()} ${f2(d.getHours())}:${f2(d.getMinutes())}`;
+    return `${f2(d.getDate())}/${f2(d.getMonth() + 1)}/${d.getFullYear()}${includeTime ? ` ${f2(d.getHours())}:${f2(d.getMinutes())}` : ""}`;
   };
-  const { data }: { data: BloodPressureMeasurement[] } = $props();
+  const {
+    data,
+    includeTime,
+  }: { data: BloodPressureMeasurement[]; includeTime: boolean } = $props();
 </script>
 
 <table class="table">
@@ -27,9 +30,10 @@
       {@const cssClassification = classificationClasses[classification]}
       <tr
         ><td class={cssClassification}>{formatDate(measure.timestamp)}</td><td
-          class={cssClassification}>{measure.systolic}</td
-        ><td class={cssClassification}>{measure.diastolic}</td><td
-          class={cssClassification}>{measure.pulseRate ?? ""}</td
+          class={cssClassification}>{Math.floor(measure.systolic)}</td
+        ><td class={cssClassification}>{Math.floor(measure.diastolic)}</td><td
+          class={cssClassification}
+          >{measure.pulseRate != null ? Math.floor(measure.pulseRate) : ""}</td
         ><td class={cssClassification}>
           {#if (measure.status ?? 0) & Status.IRREGULAR_PULSE}<span
               class="badge text-bg-secondary"

@@ -8,8 +8,7 @@
     jsonBlobURL$,
     reset,
   } from "./data";
-  import Graph from "./Graph.svelte";
-  import Table from "./Table.svelte";
+  import TransformMeasures from "./TransformMeasures.svelte";
 
   const onFileChange = (event: any) => {
     callReadFromFile(event.target.files[0]);
@@ -94,8 +93,7 @@
       {#if user.user != null}
         <h3>User {user.user}</h3>
       {/if}
-      <Graph data={user.measures}></Graph>
-      <Table data={[...user.measures].reverse()}></Table>
+      <TransformMeasures measures={user.measures} />
     {/each}
   {/if}
   <div class="mt-3 text-body-secondary">
