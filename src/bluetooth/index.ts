@@ -4,7 +4,12 @@ import {
   type BloodPressureMeasurement,
 } from "./decoding";
 
-export const readFromDevice = async () => {
+export interface DataStructure {
+  device?: string;
+  users: { user?: number; measures: BloodPressureMeasurement[] }[];
+}
+
+export const readFromDevice = async (): Promise<DataStructure> => {
   const data = await importFromBluetooth();
   const users = [];
   const usersMap = new Map<number | undefined, BloodPressureMeasurement[]>();

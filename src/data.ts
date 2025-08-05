@@ -1,6 +1,7 @@
 import { computed, writable } from "@amadeus-it-group/tansu";
 import { readFromDevice } from "./bluetooth";
 import { resolveStorePromise, toBlobURL } from "./storeUtils";
+import { merge } from "./merge";
 
 export const dataPromise$ = writable<
   ReturnType<typeof readFromDevice> | undefined
@@ -39,8 +40,12 @@ export const csvBlob$ = computed(
 );
 export const csvBlobURL$ = toBlobURL(csvBlob$);
 
+const importFromDevice = async () => {
+  return merge(await dataPromise$(), await readFromDevice());
+};
+
 export async function callReadFromDevice() {
-  const promise = readFromDevice();
+  const promise = importFromDevice();
   dataPromise$.set(promise);
   try {
     await promise;
@@ -71,8 +76,11 @@ const asyncOpenFile = async (file: File | null) => {
   return JSON.parse(fileContent);
 };
 
-export function callReadFromFile(file: File | null) {
-  dataPromise$.set(asyncOpenFile(file));
+const importFromFile = async (file: File | null) =>
+  merge(await dataPromise$(), await asyncOpenFile(file));
+
+export function callImportFromFile(file: File | null) {
+  dataPromise$.set(importFromFile(file));
 }
 
 export function reset() {
