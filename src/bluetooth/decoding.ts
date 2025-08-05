@@ -1,3 +1,5 @@
+import { formatISO } from "date-fns";
+
 export enum Status {
   BODY_MOVEMENT = 1,
   CUFF_TOO_LOOSE = 0b10,
@@ -63,14 +65,16 @@ export const decodeBloodPressureData = (
   }
   if (flags & 0b10) {
     // timestamp
-    res.timestamp = new Date(
-      bytes.getUint16(i, true),
-      bytes.getUint8(i + 2) - 1,
-      bytes.getUint8(i + 3),
-      bytes.getUint8(i + 4),
-      bytes.getUint8(i + 5),
-      bytes.getUint8(i + 6)
-    ).toISOString();
+    res.timestamp = formatISO(
+      new Date(
+        bytes.getUint16(i, true),
+        bytes.getUint8(i + 2) - 1,
+        bytes.getUint8(i + 3),
+        bytes.getUint8(i + 4),
+        bytes.getUint8(i + 5),
+        bytes.getUint8(i + 6)
+      )
+    );
     i += 7;
   }
   if (flags & 0b100) {
