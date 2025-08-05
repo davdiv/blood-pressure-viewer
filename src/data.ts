@@ -18,17 +18,21 @@ export const csvBlob$ = computed(
   () =>
     new Blob(
       [
-        `Timestamp\tSystolic\tDiastolic\tPulse rate\tStatus\tUser\n${data$()?.users.map(
-          (user) =>
-            user.measures
-              .map(
-                (a) =>
-                  `${a.timestamp}\t${a.systolic}\t${a.diastolic}\t${
-                    a.pulseRate ?? ""
-                  }\t${a.status ?? ""}\t${user.user ?? ""}`
-              )
-              .join("\n") ?? ""
-        )}`,
+        `Timestamp,Systolic,Diastolic,Pulse rate,Status,User\n${data$()
+          ?.users.map(
+            (user) =>
+              user.measures
+                .map(
+                  (a) =>
+                    `${a.timestamp},${a.systolic},${a.diastolic},${
+                      a.pulseRate ?? ""
+                    },${a.status?.toString(2).padStart(16, "0") ?? ""},${
+                      user.user ?? ""
+                    }`
+                )
+                .join("\n") ?? ""
+          )
+          .join("\n")}`,
       ],
       { type: "text/csv" }
     )
