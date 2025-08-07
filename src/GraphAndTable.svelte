@@ -10,6 +10,12 @@
 </script>
 
 {#if measures.length > 1}
-  <Graph data={measures}></Graph>
+  <details open>
+    <summary>Graph</summary>
+    <Graph data={measures}></Graph>
+  </details>
 {/if}
-<Table data={[...measures].reverse()} {includeTime}></Table>
+<details open>
+  <summary>Table</summary>
+  <Table data={[...measures].reverse()} {includeTime}></Table>
+</details>
