@@ -53,6 +53,14 @@ export default defineConfig({
             purpose: "maskable",
           },
         ],
+        file_handlers: [
+          {
+            action: ".",
+            accept: {
+              "application/json": [".bpv"],
+            },
+          },
+        ],
       },
     }),
   ],

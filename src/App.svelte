@@ -27,8 +27,8 @@
       <p>
         This web application allows to extract blood pressure measures from a
         bluetooth blood pressure monitor, to show them graphically and as a
-        list, and to save them in a JSON or CSV file. It is also possible to
-        load a previously saved JSON file.
+        list, and to save them in a BPV (JSON-based) or CSV file. It is also
+        possible to load a previously saved BPV file.
       </p>
       <p>
         Data is processed directly in the local web browser and is not sent to
@@ -41,9 +41,9 @@
     <div class="ms-3">
       {#if $dataPromise$}
         <div class="alert alert-info mt-3">
-          Unless you click on the reset button, importing data now from a JSON
-          file or a bluetooth device will result in a merge of the current data
-          with the newly imported data.
+          Unless you click on the reset button, importing data now from a file
+          or a bluetooth device will result in a merge of the current data with
+          the newly imported data.
         </div>
       {/if}
       {#if navigator.bluetooth}
@@ -62,7 +62,7 @@
         </div>
       {/if}
       <div class="mt-3">
-        <label for="formFile" class="form-label">Import JSON file</label>
+        <label for="formFile" class="form-label">Import file</label>
         <input
           class="form-control"
           type="file"
@@ -90,8 +90,8 @@
   {#if $data$}
     <a
       class="btn btn-outline-secondary mt-3"
-      download={`blood-pressure-data.json`}
-      href={$jsonBlobURL$}>Save in JSON format</a
+      download={`blood-pressure-data.bpv`}
+      href={$jsonBlobURL$}>Save in BPV format</a
     >
     <a
       class="btn btn-outline-secondary mt-3"

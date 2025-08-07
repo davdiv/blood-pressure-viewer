@@ -79,8 +79,15 @@ const asyncOpenFile = async (file: File | null) => {
 const importFromFile = async (file: File | null) =>
   merge(await dataPromise$(), await asyncOpenFile(file));
 
+const importFromFileSystemHandle = async (file: FileSystemFileHandle) =>
+  await importFromFile(await file.getFile());
+
 export function callImportFromFile(file: File | null) {
   dataPromise$.set(importFromFile(file));
+}
+
+export function callImportFromFileSystemHandle(file: FileSystemFileHandle) {
+  dataPromise$.set(importFromFileSystemHandle(file));
 }
 
 export function reset() {
