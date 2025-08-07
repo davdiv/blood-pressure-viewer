@@ -7,6 +7,7 @@
     dataPromise$,
     jsonBlobURL$,
     reset,
+    fileName$,
   } from "./data";
   import TransformMeasures from "./TransformMeasures.svelte";
 
@@ -90,12 +91,12 @@
   {#if $data$}
     <a
       class="btn btn-outline-secondary mt-3"
-      download={`blood-pressure-data.bpv`}
+      download={`${fileName$()}.bpv`}
       href={$jsonBlobURL$}>Save in BPV format</a
     >
     <a
       class="btn btn-outline-secondary mt-3"
-      download={`blood-pressure-data.csv`}
+      download={`${fileName$()}.csv`}
       href={$csvBlobURL$}>Save in CSV format</a
     >
 

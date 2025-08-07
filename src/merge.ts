@@ -36,6 +36,11 @@ export const merge = (
     return incomingData;
   }
   const device = existingData.device ?? incomingData.device;
+  const timestamp =
+    new Date(existingData.timestamp ?? 0).getTime() >
+    new Date(incomingData.timestamp ?? 0).getTime()
+      ? existingData.timestamp
+      : incomingData.timestamp;
   const usersMap = new Map<number | undefined, BloodPressureMeasurement[]>();
   for (const user of [...existingData.users, ...incomingData.users]) {
     let measures = usersMap.get(user.user);
@@ -48,6 +53,7 @@ export const merge = (
 
   return {
     device,
+    timestamp,
     users: [...usersMap.entries()].map(([user, measures]) => ({
       user,
       measures: removeDuplicates(measures).sort(sortByDate),

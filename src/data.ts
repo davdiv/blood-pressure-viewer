@@ -2,12 +2,21 @@ import { computed, writable } from "@amadeus-it-group/tansu";
 import { readFromDevice } from "./bluetooth";
 import { resolveStorePromise, toBlobURL } from "./storeUtils";
 import { merge } from "./merge";
+import { format } from "date-fns";
 
 export const dataPromise$ = writable<
   ReturnType<typeof readFromDevice> | undefined
 >(undefined);
 
 export const data$ = resolveStorePromise(dataPromise$);
+export const fileName$ = computed(() => {
+  const timestamp = data$()?.timestamp;
+  let name = "blood-pressure";
+  if (timestamp) {
+    name += "-" + format(new Date(timestamp), "yyyy-MM-dd-HH'h'mm");
+  }
+  return name;
+});
 export const jsonBlob$ = computed(
   () =>
     new Blob([JSON.stringify(data$(), null, " ")], {
