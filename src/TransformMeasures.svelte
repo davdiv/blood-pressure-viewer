@@ -2,10 +2,11 @@
   import { SvelteMap } from "svelte/reactivity";
   import { computeTimeBasedAverages } from "./average";
   import type { BloodPressureMeasurement } from "./bluetooth/decoding";
+  import Collapse from "./Collapse.svelte";
   import { applyFilters, type Filter, relevantFilters } from "./filters";
   import GraphAndTable from "./GraphAndTable.svelte";
-  import Ban from "./icons/Ban.svelte";
-  import Check from "./icons/Check.svelte";
+  import FaIcon from "./FaIcon.svelte";
+  import { faBan, faCheck } from "@fortawesome/free-solid-svg-icons";
 
   const { measures }: { measures: BloodPressureMeasurement[] } = $props();
   const filters = $derived(relevantFilters(measures));
@@ -29,38 +30,41 @@
       filtersValue.set(filter, true);
     }
   };
+
+  const uid = $props.id();
 </script>
 
 {#if filters.length > 0}
-  <details>
-    <summary
-      >{filtersValue.size} active filter(s), {measures.length} total measures, {measures.length -
-        filteredMeasures.length}
-      excluded, {filteredMeasures.length} included</summary
-    >
+  <Collapse>
+    {#snippet title()}{filtersValue.size} active filter(s), {measures.length} total
+      measures, {measures.length - filteredMeasures.length}
+      excluded, {filteredMeasures.length} included{/snippet}
     <div class="mb-3 ms-3" role="group" aria-label="Filters">
       {#each filters as filter}
         {@const active = filtersValue.get(filter.filter)}
         <button
           title={filter.description}
           class={[
-            "btn btn-outline-primary ms-1 mt-1",
+            "btn btn-outline btn-primary ms-1 mt-1",
             { active: active != null },
           ]}
           onclick={() => toggleFilter(filter.filter)}
         >
-          {#if active === true}<Check />{:else if active === false}<Ban
-            />{:else}{/if}
+          {#if active === true}
+            <FaIcon icon={faCheck} />
+          {:else if active === false}
+            <FaIcon icon={faBan} />
+          {/if}
           {filter.name}</button
         >
       {/each}
     </div>
-  </details>
+  </Collapse>
 {/if}
 
-<div class="mb-3">
-  <label for="averageMode" class="form-label">Average mode</label>
-  <select id="averageMode" class="form-select" bind:value={averageMode}>
+<div class="my-3">
+  <label for={`${uid}-averageMode`} class="me-3">Average mode</label>
+  <select id={`${uid}-averageMode`} class="select" bind:value={averageMode}>
     <option value={"measure"}>Measure (no average)</option>
     <option value={"day"}>Day</option>
     <option value={"week"}>Week</option>

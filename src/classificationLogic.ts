@@ -37,11 +37,11 @@ export const classify = ({
 };
 
 export const classificationClasses: Record<Classification, string> = {
-  [Classification.HypertensionSevere]: "text-bg-danger",
-  [Classification.HypertensionMedium]: "text-bg-warning",
-  [Classification.HypertensionLight]: "text-bg-pre-warning",
-  [Classification.NormalHigh]: "text-bg-success",
-  [Classification.Normal]: "text-bg-success",
-  [Classification.NormalOptimal]: "text-bg-success",
-  [Classification.HypoTension]: "text-bg-warning",
+  [Classification.HypertensionSevere]: "bg-error",
+  [Classification.HypertensionMedium]: "bg-warning",
+  [Classification.HypertensionLight]: "bg-pre-warning",
+  [Classification.NormalHigh]: "bg-success",
+  [Classification.Normal]: "bg-success",
+  [Classification.NormalOptimal]: "bg-success",
+  [Classification.HypoTension]: "bg-warning",
 };

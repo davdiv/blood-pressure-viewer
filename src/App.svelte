@@ -1,29 +1,65 @@
 <script lang="ts">
+  import { faClose, faDownload } from "@fortawesome/free-solid-svg-icons";
+  import Collapse from "./Collapse.svelte";
   import {
-    callReadFromDevice,
     callImportFromFile,
+    callReadFromDevice,
     csvBlobURL$,
     data$,
     dataPromise$,
+    fileName$,
     jsonBlobURL$,
     reset,
-    fileName$,
   } from "./data";
   import TransformMeasures from "./TransformMeasures.svelte";
+  import FaIcon from "./FaIcon.svelte";
 
   const onFileChange = (event: any) => {
     callImportFromFile(event.target.files[0]);
     event.target.value = null;
   };
+  const uid = $props.id();
 </script>
 
-<div class="container">
-  <!-- svelte-ignore a11y-missing-attribute -->
-  <h2 class="mt-3">
-    <img class="logo" src="./logo.svg" /> Blood Pressure Viewer
-  </h2>
-  <details open={!$dataPromise$}>
-    <summary>Presentation</summary>
+<div class="navbar bg-base-100 shadow-sm gap-3 items-center">
+  <div class="flex-1 flex items-center">
+    <img class="logo" src="./logo.svg" alt="Blood Pressure Viewer logo" />
+    <span class={{ "max-sm:hidden": !!$data$ }}>Blood Pressure Viewer</span>
+  </div>
+  {#if $data$?.device}
+    <div class="max-sm:hidden">
+      <strong>Device:</strong>
+      {$data$.device}
+    </div>
+  {/if}
+  <div class="join">
+    {#if $data$}
+      <a
+        class="join-item btn btn-outline btn-primary print:hidden"
+        download={`${fileName$()}.bpv`}
+        title="Save in BPV format"
+        href={$jsonBlobURL$}><FaIcon icon={faDownload} /> BPV</a
+      >
+      <a
+        class="join-item btn btn-outline btn-primary print:hidden"
+        download={`${fileName$()}.csv`}
+        title="Save in CSV format"
+        href={$csvBlobURL$}><FaIcon icon={faDownload} /> CSV</a
+      >
+    {/if}
+    {#if $dataPromise$}
+      <button
+        type="button"
+        class="join-item btn btn-outline btn-primary print:hidden"
+        title="Close"
+        onclick={reset}><FaIcon icon={faClose} /></button
+      >
+    {/if}
+  </div>
+</div>
+<div class="m-3">
+  <Collapse open={!$dataPromise$}>
+    {#snippet title()}Presentation{/snippet}
     <div class="ms-3">
       <p>
         This web application allows to extract blood pressure measures from a
@@ -36,13 +72,13 @@
         any remote server.
       </p>
     </div>
-  </details>
-  <details open={!$dataPromise$}>
-    <summary>Import data</summary>
+  </Collapse>
+  <Collapse open={!$dataPromise$}>
+    {#snippet title()}Import data{/snippet}
     <div class="ms-3">
       {#if $dataPromise$}
         <div class="alert alert-info mt-3">
-          Unless you click on the reset button, importing data now from a file
+          Unless you click on the close button, importing data now from a file
           or a bluetooth device will result in a merge of the current data with
           the newly imported data.
         </div>
@@ -51,7 +87,7 @@
         <button
           type="button"
           class="btn btn-primary mt-3"
-          on:click={callReadFromDevice}
+          onclick={callReadFromDevice}
           >Import from bluetooth blood pressure monitor</button
         >
       {:else}
@@ -63,23 +99,16 @@
         </div>
       {/if}
       <div class="mt-3">
-        <label for="formFile" class="form-label">Import file</label>
+        <label for={`${uid}-formFile`} class="me-3">Import file</label>
         <input
-          class="form-control"
+          class="file-input"
           type="file"
-          id="formFile"
-          on:change={onFileChange}
+          id={`${uid}-formFile`}
+          onchange={onFileChange}
         />
       </div>
     </div>
-  </details>
-  {#if $dataPromise$}
-    <button
-      type="button"
-      class="btn btn-outline-secondary mt-3"
-      on:click={reset}>Reset</button
-    >
-  {/if}
+  </Collapse>
   {#await $dataPromise$}
     <div class="alert alert-info mt-3">Loading...</div>
   {:catch error}
@@ -89,35 +118,21 @@
     </div>
   {/await}
   {#if $data$}
-    <a
-      class="btn btn-outline-secondary mt-3"
-      download={`${fileName$()}.bpv`}
-      href={$jsonBlobURL$}>Save in BPV format</a
-    >
-    <a
-      class="btn btn-outline-secondary mt-3"
-      download={`${fileName$()}.csv`}
-      href={$csvBlobURL$}>Save in CSV format</a
-    >
-
-    {#if $data$.device}
-      <div class="my-3">
-        <strong>Device:</strong>
-        {$data$.device}
-      </div>
-    {/if}
     {#each $data$.users as user}
-      <details open>
-        <summary>User {user.user ?? ""}</summary>
+      <Collapse open>
+        {#snippet title()}
+          User {user.user ?? ""}
+        {/snippet}
         <div class="ms-4">
           <TransformMeasures measures={user.measures} />
         </div>
-      </details>
+      </Collapse>
     {/each}
   {/if}
-  <div class="my-3 text-body-secondary">
+  <div class="my-3 text-body-primary print:hidden">
     <small
       >The <a
+        class="link"
         target="_blank"
         href="https://github.com/davdiv/blood-pressure-viewer">source code</a
       > of this web application is available.</small

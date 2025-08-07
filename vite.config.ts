@@ -1,7 +1,8 @@
-import { defineConfig } from "vite";
 import { svelte } from "@sveltejs/vite-plugin-svelte";
-import { VitePWA } from "vite-plugin-pwa";
+import tailwindcss from "@tailwindcss/vite";
 import { readFileSync } from "fs";
+import { defineConfig } from "vite";
+import { VitePWA } from "vite-plugin-pwa";
 
 const https = (() => {
   try {
@@ -22,6 +23,7 @@ export default defineConfig({
   },
   plugins: [
     svelte(),
+    tailwindcss(),
     VitePWA({
       injectRegister: null,
       includeAssets: ["*"],

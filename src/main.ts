@@ -1,6 +1,6 @@
 import { mount } from "svelte";
 import App from "./App.svelte";
-import "bootstrap/dist/css/bootstrap.min.css";
+import "./main.css";
 import { callImportFromFileSystemHandle } from "./data";
 
 const app = mount(App, {

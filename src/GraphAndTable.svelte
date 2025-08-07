@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { BloodPressureMeasurement } from "./bluetooth/decoding";
+  import Collapse from "./Collapse.svelte";
   import Graph from "./Graph.svelte";
   import Table from "./Table.svelte";
 
@@ -10,12 +11,12 @@
 </script>
 
 {#if measures.length > 1}
-  <details open>
-    <summary>Graph</summary>
+  <Collapse open>
+    {#snippet title()}Graph{/snippet}
     <Graph data={measures}></Graph>
-  </details>
+  </Collapse>
 {/if}
-<details open>
-  <summary>Table</summary>
+<Collapse open>
+  {#snippet title()}Table{/snippet}
   <Table data={[...measures].reverse()} {includeTime}></Table>
-</details>
+</Collapse>

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Status, type BloodPressureMeasurement } from "./bluetooth/decoding";
-  import Warning from "./icons/Warning.svelte";
-  import BedPulse from "./icons/BedPulse.svelte";
+  import FaIcon from "./FaIcon.svelte";
+  import { faWarning, faBedPulse } from "@fortawesome/free-solid-svg-icons";
   import { classificationClasses, classify } from "./classificationLogic";
 
   const f2 = (a: number) => `${a}`.padStart(2, "0");
@@ -24,7 +24,7 @@
       ><th title="Pulse rate (beats/min)">Pul</th><th></th></tr
     >
   </thead>
-  <tbody class="table-group-divider">
+  <tbody>
     {#each data as measure}
       {@const classification = classify(measure)}
       {@const cssClassification = classificationClasses[classification]}
@@ -36,20 +36,20 @@
           >{measure.pulseRate != null ? Math.round(measure.pulseRate) : ""}</td
         ><td class={cssClassification}>
           {#if (measure.status ?? 0) & Status.IRREGULAR_PULSE}<span
-              class="badge text-bg-secondary"
-              title="Irregular pulse"><Warning /></span
+              class="badge badge-warning cursor-default"
+              title="Irregular pulse"><FaIcon icon={faWarning} /></span
             >{/if}
           {#if (measure.status ?? 0) & Status.EXT_TRIPLE_MEASURE}<span
-              class="badge text-bg-secondary"
+              class="badge badge-info cursor-default"
               title="Average of 3 measures">&times;3</span
             >{/if}
           {#if (measure.status ?? 0) & Status.EXT_MISSING_REST}<span
-              class="badge text-bg-secondary"
-              title="Missing rest detected"><BedPulse /></span
+              class="badge badge-warning cursor-default"
+              title="Missing rest detected"><FaIcon icon={faBedPulse} /></span
             >{/if}
           {#if (measure.status ?? 0) & Status.EXT_UNKNOWN_REST}<span
-              class="badge text-bg-secondary"
-              title="Unknown rest status"><BedPulse /> ?</span
+              class="badge badge-warning cursor-default"
+              title="Unknown rest status"><FaIcon icon={faBedPulse} /> ?</span
             >{/if}</td
         ></tr
       >
