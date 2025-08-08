@@ -61,6 +61,11 @@ export const filters: { name: string; description: string; filter: Filter }[] =
       filter: (measure) => !!((measure.status ?? 0) & Status.EXT_MISSING_REST),
     },
     {
+      name: "Unknown rest",
+      description: "Measures whose rest status could not be determined",
+      filter: (measure) => !!((measure.status ?? 0) & Status.EXT_UNKNOWN_REST),
+    },
+    {
       name: "x3",
       description: "Triple measures",
       filter: (measure) =>

@@ -46,6 +46,10 @@
           {#if (measure.status ?? 0) & Status.EXT_MISSING_REST}<span
               class="badge text-bg-secondary"
               title="Missing rest detected"><BedPulse /></span
+            >{/if}
+          {#if (measure.status ?? 0) & Status.EXT_UNKNOWN_REST}<span
+              class="badge text-bg-secondary"
+              title="Unknown rest status"><BedPulse /> ?</span
             >{/if}</td
         ></tr
       >

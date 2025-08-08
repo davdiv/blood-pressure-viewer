@@ -9,6 +9,7 @@ export enum Status {
   // values found on Beurer BM64:
   EXT_TRIPLE_MEASURE = 0x1000,
   EXT_MISSING_REST = 0x4000,
+  EXT_UNKNOWN_REST = 0x8000,
 }
 
 export interface BloodPressureMeasurement {
