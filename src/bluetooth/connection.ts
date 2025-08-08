@@ -1,6 +1,5 @@
 export interface BloodPressureRawMeasures {
   deviceName?: string;
-  deviceFeatures: DataView;
   measures: DataView[];
 }
 
@@ -12,9 +11,6 @@ export const importFromBluetooth =
     const deviceName = device.name;
     const server = await device.gatt!.connect()!;
     const service = await server.getPrimaryService("blood_pressure");
-    const deviceFeatures = await (
-      await service.getCharacteristic("blood_pressure_feature")
-    ).readValue();
     const measurement = await service.getCharacteristic(
       "blood_pressure_measurement"
     );
@@ -27,5 +23,5 @@ export const importFromBluetooth =
     await new Promise((resolve) =>
       device.addEventListener("gattserverdisconnected", resolve)
     );
-    return { deviceName, deviceFeatures, measures };
+    return { deviceName, measures };
   };
