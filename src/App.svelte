@@ -112,7 +112,7 @@
   {#await $dataPromise$}
     <div class="alert alert-info mt-3">Loading...</div>
   {:catch error}
-    <div class="alert alert-danger mt-3">
+    <div class="alert alert-error mt-3">
       An error occurred :<br />
       <pre>{error}</pre>
     </div>
