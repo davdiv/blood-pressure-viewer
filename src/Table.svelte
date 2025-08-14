@@ -16,7 +16,7 @@
   }: { data: BloodPressureMeasurement[]; includeTime: boolean } = $props();
 </script>
 
-<table class="table">
+<table class="table text-center table-md sm:table-lg">
   <thead>
     <tr
       ><th>Date</th><th title="Systolic (mmHg)">Sys</th><th
@@ -56,3 +56,15 @@
     {/each}
   </tbody>
 </table>
+
+<style>
+  td,
+  th {
+    padding-inline: 0.05em;
+    padding-block: 0.5em;
+  }
+
+  .badge {
+    padding-inline: 0.1em;
+  }
+</style>

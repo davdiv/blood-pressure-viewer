@@ -13,10 +13,14 @@
 {#if measures.length > 1}
   <Collapse open>
     {#snippet title()}Graph{/snippet}
-    <Graph data={measures}></Graph>
+    <div class="-ms-6">
+      <Graph data={measures}></Graph>
+    </div>
   </Collapse>
 {/if}
 <Collapse open>
   {#snippet title()}Table{/snippet}
-  <Table data={[...measures].reverse()} {includeTime}></Table>
+  <div class="-ms-6">
+    <Table data={[...measures].reverse()} {includeTime}></Table>
+  </div>
 </Collapse>

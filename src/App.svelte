@@ -60,53 +60,49 @@
 <div class="m-3">
   <Collapse open={!$dataPromise$}>
     {#snippet title()}Presentation{/snippet}
-    <div class="ms-3">
-      <p>
-        This web application allows to extract blood pressure measures from a
-        bluetooth blood pressure monitor, to show them graphically and as a
-        list, and to save them in a BPV (JSON-based) or CSV file. It is also
-        possible to load a previously saved BPV file.
-      </p>
-      <p>
-        Data is processed directly in the local web browser and is not sent to
-        any remote server.
-      </p>
-    </div>
+    <p>
+      This web application allows to extract blood pressure measures from a
+      bluetooth blood pressure monitor, to show them graphically and as a list,
+      and to save them in a BPV (JSON-based) or CSV file. It is also possible to
+      load a previously saved BPV file.
+    </p>
+    <p>
+      Data is processed directly in the local web browser and is not sent to any
+      remote server.
+    </p>
   </Collapse>
   <Collapse open={!$dataPromise$}>
     {#snippet title()}Import data{/snippet}
-    <div class="ms-3">
-      {#if $dataPromise$}
-        <div class="alert alert-info mt-3">
-          Unless you click on the close button, importing data now from a file
-          or a bluetooth device will result in a merge of the current data with
-          the newly imported data.
-        </div>
-      {/if}
-      {#if navigator.bluetooth}
-        <button
-          type="button"
-          class="btn btn-primary mt-3"
-          onclick={callReadFromDevice}
-          >Import from bluetooth blood pressure monitor</button
-        >
-      {:else}
-        <div class="alert alert-warning mt-3">
-          Your web browser is not able to connect to a bluetooth blood pressure
-          monitor. Check the <a href="https://caniuse.com/web-bluetooth"
-            >compatible browsers here</a
-          >.
-        </div>
-      {/if}
-      <div class="mt-3">
-        <label for={`${uid}-formFile`} class="me-3">Import file</label>
-        <input
-          class="file-input"
-          type="file"
-          id={`${uid}-formFile`}
-          onchange={onFileChange}
-        />
+    {#if $dataPromise$}
+      <div class="alert alert-info mt-3">
+        Unless you click on the close button, importing data now from a file or
+        a bluetooth device will result in a merge of the current data with the
+        newly imported data.
       </div>
+    {/if}
+    {#if navigator.bluetooth}
+      <button
+        type="button"
+        class="btn btn-primary mt-3"
+        onclick={callReadFromDevice}
+        >Import from bluetooth blood pressure monitor</button
+      >
+    {:else}
+      <div class="alert alert-warning mt-3">
+        Your web browser is not able to connect to a bluetooth blood pressure
+        monitor. Check the <a href="https://caniuse.com/web-bluetooth"
+          >compatible browsers here</a
+        >.
+      </div>
+    {/if}
+    <div class="mt-3">
+      <label for={`${uid}-formFile`} class="me-3">Import file</label>
+      <input
+        class="file-input"
+        type="file"
+        id={`${uid}-formFile`}
+        onchange={onFileChange}
+      />
     </div>
   </Collapse>
   {#await $dataPromise$}
@@ -123,9 +119,7 @@
         {#snippet title()}
           User {user.user ?? ""}
         {/snippet}
-        <div class="ms-4">
-          <TransformMeasures measures={user.measures} />
-        </div>
+        <TransformMeasures measures={user.measures} />
       </Collapse>
     {/each}
   {/if}

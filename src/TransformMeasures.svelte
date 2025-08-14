@@ -39,7 +39,7 @@
     {#snippet title()}{filtersValue.size} active filter(s), {measures.length} total
       measures, {measures.length - filteredMeasures.length}
       excluded, {filteredMeasures.length} included{/snippet}
-    <div class="mb-3 ms-3" role="group" aria-label="Filters">
+    <div class="mb-3" role="group" aria-label="Filters">
       {#each filters as filter}
         {@const active = filtersValue.get(filter.filter)}
         <button
