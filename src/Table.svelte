@@ -3,6 +3,7 @@
   import FaIcon from "./FaIcon.svelte";
   import { faWarning, faBedPulse } from "@fortawesome/free-solid-svg-icons";
   import { classificationClasses, classify } from "./classificationLogic";
+  import { computeTimeBasedAverages } from "./average";
 
   const f2 = (a: number) => `${a}`.padStart(2, "0");
   const formatDate = (date: string | undefined) => {
@@ -14,7 +15,45 @@
     data,
     includeTime,
   }: { data: BloodPressureMeasurement[]; includeTime: boolean } = $props();
+
+  const average = $derived(
+    data.length > 1 ? computeTimeBasedAverages(data) : undefined
+  );
 </script>
+
+{#snippet line(
+  measure: BloodPressureMeasurement,
+  timestamp?: string,
+  cssClass?: string
+)}
+  {@const cssClassification = classificationClasses[classify(measure)]}
+  <tr class={cssClass}
+    ><td class={cssClassification}
+      >{timestamp ?? formatDate(measure.timestamp)}</td
+    ><td class={cssClassification}>{Math.round(measure.systolic)}</td><td
+      class={cssClassification}>{Math.round(measure.diastolic)}</td
+    ><td class={cssClassification}
+      >{measure.pulseRate != null ? Math.round(measure.pulseRate) : ""}</td
+    ><td class={cssClassification}>
+      {#if (measure.status ?? 0) & Status.IRREGULAR_PULSE}<span
+          class="badge badge-warning cursor-default"
+          title="Irregular pulse"><FaIcon icon={faWarning} /></span
+        >{/if}
+      {#if (measure.status ?? 0) & Status.EXT_TRIPLE_MEASURE}<span
+          class="badge badge-info cursor-default"
+          title="Average of 3 measures">&times;3</span
+        >{/if}
+      {#if (measure.status ?? 0) & Status.EXT_MISSING_REST}<span
+          class="badge badge-warning cursor-default"
+          title="Missing rest detected"><FaIcon icon={faBedPulse} /></span
+        >{/if}
+      {#if (measure.status ?? 0) & Status.EXT_UNKNOWN_REST}<span
+          class="badge badge-warning cursor-default"
+          title="Unknown rest status"><FaIcon icon={faBedPulse} /> ?</span
+        >{/if}</td
+    ></tr
+  >
+{/snippet}
 
 <div class="sm:columns-2 lg:columns-3 xl:columns-4">
   <table class="table text-center table-md">
@@ -27,36 +66,11 @@
     </thead>
     <tbody>
       {#each data as measure}
-        {@const classification = classify(measure)}
-        {@const cssClassification = classificationClasses[classification]}
-        <tr
-          ><td class={cssClassification}>{formatDate(measure.timestamp)}</td><td
-            class={cssClassification}>{Math.round(measure.systolic)}</td
-          ><td class={cssClassification}>{Math.round(measure.diastolic)}</td><td
-            class={cssClassification}
-            >{measure.pulseRate != null
-              ? Math.round(measure.pulseRate)
-              : ""}</td
-          ><td class={cssClassification}>
-            {#if (measure.status ?? 0) & Status.IRREGULAR_PULSE}<span
-                class="badge badge-warning cursor-default"
-                title="Irregular pulse"><FaIcon icon={faWarning} /></span
-              >{/if}
-            {#if (measure.status ?? 0) & Status.EXT_TRIPLE_MEASURE}<span
-                class="badge badge-info cursor-default"
-                title="Average of 3 measures">&times;3</span
-              >{/if}
-            {#if (measure.status ?? 0) & Status.EXT_MISSING_REST}<span
-                class="badge badge-warning cursor-default"
-                title="Missing rest detected"><FaIcon icon={faBedPulse} /></span
-              >{/if}
-            {#if (measure.status ?? 0) & Status.EXT_UNKNOWN_REST}<span
-                class="badge badge-warning cursor-default"
-                title="Unknown rest status"><FaIcon icon={faBedPulse} /> ?</span
-              >{/if}</td
-          ></tr
-        >
+        {@render line(measure)}
       {/each}
+      {#if average}
+        {@render line(average.all[0], "Average", "font-bold")}
+      {/if}
     </tbody>
   </table>
 </div>

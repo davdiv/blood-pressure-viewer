@@ -1,14 +1,14 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
 
-  const {
+  let {
     title,
     children,
-    open,
+    open = $bindable(),
   }: { title: Snippet; children: Snippet; open?: boolean } = $props();
 </script>
 
-<details class="mt-3" {open}>
+<details class="mt-3" bind:open>
   <summary class="cursor-pointer">{@render title()}</summary>
   <div class="ms-3 mt-3">
     {@render children()}

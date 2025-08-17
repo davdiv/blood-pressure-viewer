@@ -11,7 +11,7 @@
     jsonBlobURL$,
     reset,
   } from "./data";
-  import TransformMeasures from "./TransformMeasures.svelte";
+  import MeasuresView from "./MeasuresView.svelte";
   import FaIcon from "./FaIcon.svelte";
 
   const onFileChange = (event: any) => {
@@ -119,7 +119,7 @@
         {#snippet title()}
           User {user.user ?? ""}
         {/snippet}
-        <TransformMeasures measures={user.measures} />
+        <MeasuresView measures={user.measures} />
       </Collapse>
     {/each}
   {/if}
