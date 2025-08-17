@@ -16,46 +16,50 @@
   }: { data: BloodPressureMeasurement[]; includeTime: boolean } = $props();
 </script>
 
-<table class="table text-center table-md sm:table-lg">
-  <thead>
-    <tr
-      ><th>Date</th><th title="Systolic (mmHg)">Sys</th><th
-        title="Diastolic (mmHg)">Dia</th
-      ><th title="Pulse rate (beats/min)">Pul</th><th></th></tr
-    >
-  </thead>
-  <tbody>
-    {#each data as measure}
-      {@const classification = classify(measure)}
-      {@const cssClassification = classificationClasses[classification]}
+<div class="sm:columns-2 lg:columns-3 xl:columns-4">
+  <table class="table text-center table-md">
+    <thead>
       <tr
-        ><td class={cssClassification}>{formatDate(measure.timestamp)}</td><td
-          class={cssClassification}>{Math.round(measure.systolic)}</td
-        ><td class={cssClassification}>{Math.round(measure.diastolic)}</td><td
-          class={cssClassification}
-          >{measure.pulseRate != null ? Math.round(measure.pulseRate) : ""}</td
-        ><td class={cssClassification}>
-          {#if (measure.status ?? 0) & Status.IRREGULAR_PULSE}<span
-              class="badge badge-warning cursor-default"
-              title="Irregular pulse"><FaIcon icon={faWarning} /></span
-            >{/if}
-          {#if (measure.status ?? 0) & Status.EXT_TRIPLE_MEASURE}<span
-              class="badge badge-info cursor-default"
-              title="Average of 3 measures">&times;3</span
-            >{/if}
-          {#if (measure.status ?? 0) & Status.EXT_MISSING_REST}<span
-              class="badge badge-warning cursor-default"
-              title="Missing rest detected"><FaIcon icon={faBedPulse} /></span
-            >{/if}
-          {#if (measure.status ?? 0) & Status.EXT_UNKNOWN_REST}<span
-              class="badge badge-warning cursor-default"
-              title="Unknown rest status"><FaIcon icon={faBedPulse} /> ?</span
-            >{/if}</td
-        ></tr
+        ><th>Date</th><th title="Systolic (mmHg)">Sys</th><th
+          title="Diastolic (mmHg)">Dia</th
+        ><th title="Pulse rate (beats/min)">Pul</th><th></th></tr
       >
-    {/each}
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      {#each data as measure}
+        {@const classification = classify(measure)}
+        {@const cssClassification = classificationClasses[classification]}
+        <tr
+          ><td class={cssClassification}>{formatDate(measure.timestamp)}</td><td
+            class={cssClassification}>{Math.round(measure.systolic)}</td
+          ><td class={cssClassification}>{Math.round(measure.diastolic)}</td><td
+            class={cssClassification}
+            >{measure.pulseRate != null
+              ? Math.round(measure.pulseRate)
+              : ""}</td
+          ><td class={cssClassification}>
+            {#if (measure.status ?? 0) & Status.IRREGULAR_PULSE}<span
+                class="badge badge-warning cursor-default"
+                title="Irregular pulse"><FaIcon icon={faWarning} /></span
+              >{/if}
+            {#if (measure.status ?? 0) & Status.EXT_TRIPLE_MEASURE}<span
+                class="badge badge-info cursor-default"
+                title="Average of 3 measures">&times;3</span
+              >{/if}
+            {#if (measure.status ?? 0) & Status.EXT_MISSING_REST}<span
+                class="badge badge-warning cursor-default"
+                title="Missing rest detected"><FaIcon icon={faBedPulse} /></span
+              >{/if}
+            {#if (measure.status ?? 0) & Status.EXT_UNKNOWN_REST}<span
+                class="badge badge-warning cursor-default"
+                title="Unknown rest status"><FaIcon icon={faBedPulse} /> ?</span
+              >{/if}</td
+          ></tr
+        >
+      {/each}
+    </tbody>
+  </table>
+</div>
 
 <style>
   td,

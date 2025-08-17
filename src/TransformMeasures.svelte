@@ -38,7 +38,9 @@
   <Collapse>
     {#snippet title()}{filtersValue.size} active filter(s), {measures.length} total
       measures, {measures.length - filteredMeasures.length}
-      excluded, {filteredMeasures.length} included{/snippet}
+      excluded, {filteredMeasures.length} included, {averageMode === "measure"
+        ? "no average"
+        : `${averageMode} average`}{/snippet}
     <div class="mb-3" role="group" aria-label="Filters">
       {#each filters as filter}
         {@const active = filtersValue.get(filter.filter)}
@@ -59,18 +61,17 @@
         >
       {/each}
     </div>
+    <div class="my-3">
+      <label for={`${uid}-averageMode`} class="me-3">Average mode</label>
+      <select id={`${uid}-averageMode`} class="select" bind:value={averageMode}>
+        <option value={"measure"}>Measure (no average)</option>
+        <option value={"day"}>Day</option>
+        <option value={"week"}>Week</option>
+        <option value={"all"}>All</option>
+      </select>
+    </div>
   </Collapse>
 {/if}
-
-<div class="my-3">
-  <label for={`${uid}-averageMode`} class="me-3">Average mode</label>
-  <select id={`${uid}-averageMode`} class="select" bind:value={averageMode}>
-    <option value={"measure"}>Measure (no average)</option>
-    <option value={"day"}>Day</option>
-    <option value={"week"}>Week</option>
-    <option value={"all"}>All</option>
-  </select>
-</div>
 
 {#if measuresToDisplay && measuresToDisplay.length > 0}
   <GraphAndTable
