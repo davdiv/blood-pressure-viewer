@@ -16,22 +16,24 @@ class Average {
   }
 }
 
-class BloodPressureAverage {
+class BloodPressureAverage<T> {
   timestamp: string;
   systolic = new Average();
   diastolic = new Average();
   mean = new Average();
   pulseRate = new Average();
+  sources: T[] = [];
   constructor(public date: Date) {
     this.timestamp = formatISO(date, { representation: "date" });
   }
 
-  add(measure: BloodPressureMeasurement) {
+  add(measure: BloodPressureMeasurement, source: T) {
     const coef = (measure.status ?? 0) & Status.EXT_TRIPLE_MEASURE ? 3 : 1;
     this.systolic.add(measure.systolic, coef);
     this.diastolic.add(measure.diastolic, coef);
     this.mean.add(measure.mean, coef);
     this.pulseRate.add(measure.pulseRate, coef);
+    this.sources.push(source);
   }
 
   result(): BloodPressureMeasurement {
@@ -49,7 +51,10 @@ export const computeTimeBasedAverages = (
   measures: BloodPressureMeasurement[]
 ) => {
   let lastDate: Date | null = null;
-  const dayMap = new Map<string, BloodPressureAverage>();
+  const dayMap = new Map<
+    string,
+    BloodPressureAverage<BloodPressureMeasurement>
+  >();
   for (const measure of measures) {
     const timestamp = measure.timestamp;
     if (timestamp) {
@@ -71,7 +76,7 @@ export const computeTimeBasedAverages = (
         dayObject = new BloodPressureAverage(date);
         dayMap.set(day, dayObject);
       }
-      dayObject.add(measure);
+      dayObject.add(measure, measure);
     }
   }
   if (!lastDate) {
@@ -79,7 +84,10 @@ export const computeTimeBasedAverages = (
   }
   const dayMapValues = [...dayMap.values()];
   const allAverage = new BloodPressureAverage(lastDate);
-  const weekMap = new Map<number, BloodPressureAverage>();
+  const weekMap = new Map<
+    number,
+    BloodPressureAverage<BloodPressureAverage<BloodPressureMeasurement>>
+  >();
   for (const dayAverage of dayMapValues) {
     const weekNumber = differenceInWeeks(lastDate, dayAverage.date);
     let weekAverage = weekMap.get(weekNumber);
@@ -88,13 +96,18 @@ export const computeTimeBasedAverages = (
       weekMap.set(weekNumber, weekAverage);
     }
     const dayAverageResult = dayAverage.result();
-    allAverage.add(dayAverageResult);
-    weekAverage.add(dayAverageResult);
+    allAverage.add(dayAverageResult, null);
+    weekAverage.add(dayAverageResult, dayAverage);
   }
   const weekMapValues = [...weekMap.values()];
   return {
-    all: [allAverage.result()],
-    week: weekMapValues.map((value) => value.result()),
-    day: dayMapValues.map((value) => value.result()),
+    average: allAverage.result(),
+    sources: weekMapValues.map((value) => ({
+      average: value.result(),
+      sources: value.sources.map((value) => ({
+        average: value.result(),
+        sources: value.sources,
+      })),
+    })),
   };
 };

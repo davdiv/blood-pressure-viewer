@@ -1,6 +1,5 @@
 <script lang="ts">
   import { SvelteMap } from "svelte/reactivity";
-  import { computeTimeBasedAverages } from "./average";
   import type { BloodPressureMeasurement } from "./bluetooth/decoding";
   import Collapse from "./Collapse.svelte";
   import { applyFilters, type Filter, relevantFilters } from "./filters";
@@ -13,13 +12,6 @@
   const filtersValue = new SvelteMap<Filter, boolean>();
   const filteredMeasures = $derived(applyFilters(measures, filtersValue));
 
-  let averageMode: "measure" | "day" | "week" | "all" = $state("measure");
-
-  const averages = $derived(computeTimeBasedAverages(filteredMeasures));
-  const measuresToDisplay = $derived(
-    averageMode === "measure" ? filteredMeasures : averages?.[averageMode]
-  );
-
   const toggleFilter = (filter: Filter) => {
     const currentValue = filtersValue.get(filter);
     if (currentValue === true) {
@@ -30,17 +22,13 @@
       filtersValue.set(filter, true);
     }
   };
-
-  const uid = $props.id();
 </script>
 
 {#if filters.length > 0}
   <Collapse>
     {#snippet title()}{filtersValue.size} active filter(s), {measures.length} total
       measures, {measures.length - filteredMeasures.length}
-      excluded, {filteredMeasures.length} included, {averageMode === "measure"
-        ? "no average"
-        : `${averageMode} average`}{/snippet}
+      excluded, {filteredMeasures.length} included{/snippet}
     <div class="mb-3" role="group" aria-label="Filters">
       {#each filters as filter}
         {@const active = filtersValue.get(filter.filter)}
@@ -61,23 +49,11 @@
         >
       {/each}
     </div>
-    <div class="my-3">
-      <label for={`${uid}-averageMode`} class="me-3">Average mode</label>
-      <select id={`${uid}-averageMode`} class="select" bind:value={averageMode}>
-        <option value={"measure"}>Measure (no average)</option>
-        <option value={"day"}>Day</option>
-        <option value={"week"}>Week</option>
-        <option value={"all"}>All</option>
-      </select>
-    </div>
   </Collapse>
 {/if}
 
-{#if measuresToDisplay && measuresToDisplay.length > 0}
-  <GraphAndTable
-    measures={measuresToDisplay}
-    includeTime={averageMode === "measure"}
-  />
+{#if filteredMeasures && filteredMeasures.length > 0}
+  <GraphAndTable measures={filteredMeasures} />
 {:else}
   <div class="alert alert-info">
     There is no measure matching current filters.

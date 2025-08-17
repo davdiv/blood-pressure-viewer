@@ -4,10 +4,7 @@
   import Graph from "./Graph.svelte";
   import Table from "./Table.svelte";
 
-  const {
-    measures,
-    includeTime,
-  }: { measures: BloodPressureMeasurement[]; includeTime: boolean } = $props();
+  const { measures }: { measures: BloodPressureMeasurement[] } = $props();
 </script>
 
 {#if measures.length > 1}
@@ -21,6 +18,6 @@
 <Collapse open>
   {#snippet title()}Table{/snippet}
   <div class="-ms-6">
-    <Table data={[...measures].reverse()} {includeTime}></Table>
+    <Table data={measures}></Table>
   </div>
 </Collapse>

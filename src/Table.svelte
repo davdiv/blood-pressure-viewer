@@ -6,19 +6,14 @@
   import { computeTimeBasedAverages } from "./average";
 
   const f2 = (a: number) => `${a}`.padStart(2, "0");
-  const formatDate = (date: string | undefined) => {
+  const formatDate = (date: string | undefined, includeTime = true) => {
     if (!date) return "";
     const d = new Date(date);
     return `${f2(d.getDate())}/${f2(d.getMonth() + 1)}/${d.getFullYear()}${includeTime ? ` ${f2(d.getHours())}:${f2(d.getMinutes())}` : ""}`;
   };
-  const {
-    data,
-    includeTime,
-  }: { data: BloodPressureMeasurement[]; includeTime: boolean } = $props();
+  const { data }: { data: BloodPressureMeasurement[] } = $props();
 
-  const average = $derived(
-    data.length > 1 ? computeTimeBasedAverages(data) : undefined
-  );
+  const averages = $derived(computeTimeBasedAverages(data)!);
 </script>
 
 {#snippet line(
@@ -65,11 +60,21 @@
       >
     </thead>
     <tbody>
-      {#each data as measure}
-        {@render line(measure)}
+      {#each averages.sources as week}
+        {#each week.sources as day}
+          {#each day.sources as measure}
+            {@render line(measure)}
+          {/each}
+          {#if day.sources.length > 1}
+            {@render line(day.average, "Day average", "font-bold")}
+          {/if}
+        {/each}
+        {#if week.sources.length > 1}
+          {@render line(week.average, "Week average", "font-bold")}
+        {/if}
       {/each}
-      {#if average}
-        {@render line(average.all[0], "Average", "font-bold")}
+      {#if averages.sources.length > 1}
+        {@render line(averages.average, "Global average", "font-bold")}
       {/if}
     </tbody>
   </table>
